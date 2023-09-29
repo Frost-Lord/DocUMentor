@@ -1,0 +1,18 @@
+{
+    "greeting": {
+        "patterns": ["hello", "hi", "hey"],
+        "responses": ["Hi there!", "Hello!", "Hey!"]
+    },
+    "goodbye": {
+        "patterns": ["bye", "goodbye", "see you"],
+        "responses": ["Goodbye!", "See you later!", "Bye!"]
+    },
+    "insult": {
+        "patterns": ["you're stupid", "I hate you", "you suck"],
+        "responses": ["That's not nice.", "Well, everyone has their opinion.", "Sorry you feel that way."]
+    },
+    "compliment": {
+        "patterns": ["you're awesome", "you're great", "I like you"],
+        "responses": ["Thank you!", "You're awesome too!", "I'm flattered."]
+    }
+}

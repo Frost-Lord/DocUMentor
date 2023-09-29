@@ -1,5 +1,7 @@
 const { EmbedBuilder, PermissionsBitField, ButtonStyle, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const trainAI = require("../NeuralNetwork/train");
+const Session = require("../NeuralNetwork/Session");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -58,25 +60,25 @@ module.exports = {
       .setDescription("The AI has been retrained successfully.")
       .setColor(0x00FF00);
 
-    const progressBarInterval = setInterval(async() => {
-      const currentPercentage = Math.floor((Date.now() - startTime) / 100);
-      const progressBar = generateProgressBar(currentPercentage);
-
-      message.edit({
-        embeds: [Rembed],
-        components: [progressBar.toJSON()],
-      });      
-
-      if (currentPercentage >= 100) {
-        clearInterval(progressBarInterval);
-
+      const updateProgressBar = (currentEpoch, totalEpochs) => {
+        const percentage = (currentEpoch / totalEpochs) * 100;
+        const progressBar = generateProgressBar(percentage);
         message.edit({
-          embeds: [successEmbed],
-          components: [],
+          embeds: [Rembed],
+          components: [progressBar.toJSON()],
         });
-        await Train();
-      }
-    }, 500);
+
+        if (percentage >= 100) {
+          message.edit({
+            embeds: [successEmbed],
+            components: [],
+          });
+        }
+      };
+
+      let Model = await trainAI(updateProgressBar);
+      Model.save("file://./src/model");
+      Session.addModel(Model);
 
   }
 };
