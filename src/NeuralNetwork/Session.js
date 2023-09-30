@@ -27,14 +27,14 @@ module.exports = {
         var SessData = Sessions[id];
         if (!SessData.messages.length) return;
 
-        var Dataset = JSON.parse(Fs.readFileSync("../database/db.json"));
+        var Dataset = JSON.parse(Fs.readFileSync("./src/database/db.json"));
 
         SessData.messages.forEach(msg => {
             if (Dataset[SessData.type][SessData.mode + "s"].find(c => c == msg)) return;
             Dataset[SessData.type][SessData.mode + "s"].push(msg);
         });
 
-        Fs.writeFileSync("../database/db.json", JSON.stringify(Dataset));
+        Fs.writeFileSync("./src/database/db.json", JSON.stringify(Dataset));
     },
     addModel(trainedModel) {
         model = trainedModel;

@@ -1,0 +1,12 @@
+{
+    "Stats": {
+        "Correct": 0,
+        "False": 0,
+        "GPU": 0
+    },
+    "Config": {
+        "selflearning": false,
+        "enabled": true,
+        "channel": null
+    }
+}

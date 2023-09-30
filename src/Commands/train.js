@@ -16,6 +16,8 @@ module.exports = {
       return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
+    await interaction.deferReply();
+
     function generateProgressBar(percentage) {
       const filled = "■";
       const empty = "□";
@@ -43,36 +45,64 @@ module.exports = {
           .setCustomId('percentagebartraining')
           .setDisabled(true)
       );
-
-
       return row;
     }
 
-    const Rembed = new EmbedBuilder()
-      .setTitle("Retraining the AI")
-      .setDescription("Retraining the AI. This may take a while...")
-      .setColor(0xffff00);
+    
+    const row2 = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Success)
+        .setLabel(`Save`)
+        .setCustomId('savemodel')
+        .setEmoji("✅")
+        .setDisabled(false),
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Danger)
+        .setLabel("Delete")
+        .setCustomId('deletemodel')
+        .setEmoji("🗑️")
+        .setDisabled(false),
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Primary)
+        .setLabel("Re-Train")
+        .setCustomId('retrainmodel')
+        .setEmoji("⚙️")
+        .setDisabled(false)
+    );
 
-    const message = await interaction.reply({ embeds: [Rembed] });
-
-    const successEmbed = new EmbedBuilder()
+    async function optionembd(message, acc){
+      const successEmbed = new EmbedBuilder()
       .setTitle("Success")
-      .setDescription("The AI has been retrained successfully.")
+      .setDescription(`The AI has been retrained successfully. \n **Accuracy:** ${acc}% `)
       .setColor(0x00FF00);
 
-      const updateProgressBar = (currentEpoch, totalEpochs) => {
-        const percentage = (currentEpoch / totalEpochs) * 100;
+      message.edit({
+        embeds: [successEmbed],
+        components: [row2],
+      });
+    }
+
+      const updateProgressBar = async(progressData) => {
+        const { epoch, totalEpochs, accuracy, loss, elapsedTime, estimatedTime } = progressData;
+        
+        const percentage = (parseFloat(epoch / totalEpochs) * 100).toFixed(2);
         const progressBar = generateProgressBar(percentage);
+
+        const Rembed = new EmbedBuilder()
+        .setTitle("Retraining the AI")
+        .setDescription(`Current Epoch: ${epoch}/${totalEpochs}\nAccuracy: ${accuracy}\nLoss: ${loss}\nElapsed Time: ${elapsedTime}\nEstimated Time Remaining: ${estimatedTime}`)
+        .setColor(0xffff00);
+  
+        const message = await interaction.editReply({ embeds: [Rembed] });
+
         message.edit({
           embeds: [Rembed],
           components: [progressBar.toJSON()],
         });
 
         if (percentage >= 100) {
-          message.edit({
-            embeds: [successEmbed],
-            components: [],
-          });
+          optionembd(message, accuracy)
         }
       };
 

@@ -3,7 +3,7 @@ const tf = require("@tensorflow/tfjs-node");
 const use = require("@tensorflow-models/universal-sentence-encoder")
 
 const trainModel = async (progressCallback) => {
-    var data = JSON.parse(fs.readFileSync("../database/db.json"));
+    var data = JSON.parse(fs.readFileSync("./src/database/db.json"));
     var trainingData = [];
 
     const types = Object.keys(data);
@@ -31,17 +31,38 @@ const trainModel = async (progressCallback) => {
             activation: "softmax",
             units: types.length
         })
-    )
+    );
     model.compile({
         loss: "categoricalCrossentropy",
         optimizer: tf.train.adam(0.001),
         metrics: ["accuracy"]
     });
 
+    const startTime = Date.now();
+    let runningAccuracySum = 0;
+  
     const onEpochEnd = async (epoch, logs) => {
-        console.log('Accuracy', logs.acc);
-        console.log(`Epoch ${epoch} of 300 completed.`);
-        progressCallback(epoch + 1, 300);
+        const elapsedTime = Date.now() - startTime;
+        const estimatedTime = (elapsedTime / (epoch + 1)) * (300 - epoch - 1);
+
+        const formatTime = (ms) => {
+            const hours = Math.floor(ms / 3600000);
+            const minutes = Math.floor((ms % 3600000) / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            return `${hours}h ${minutes}m ${seconds}s`;
+        };
+
+        runningAccuracySum += logs.acc;
+        const runningAccuracyAvg = runningAccuracySum / (epoch + 1);
+      
+        progressCallback({
+            epoch: epoch + 1,
+            totalEpochs: 300,
+            accuracy: parseFloat((runningAccuracyAvg * 100).toFixed(2)),
+            loss: parseFloat((logs.loss * 100).toFixed(2)),
+            elapsedTime: formatTime(elapsedTime),
+            estimatedTime: formatTime(estimatedTime)
+        });
     };
 
     await model.fit(xTrain, yTrain, {
@@ -50,8 +71,6 @@ const trainModel = async (progressCallback) => {
         shuffle: true,
         epochs: 300,
         callbacks: { onEpochEnd }
-    }).then(info => {
-        console.log('Final accuracy', info.history.acc);
     });
     return model;
 }

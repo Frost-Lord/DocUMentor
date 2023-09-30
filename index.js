@@ -1,8 +1,7 @@
 const Discord = require("discord.js");
 const { Client, GatewayIntentBits, Partials } = require("discord.js");
-const fs = require("fs");
-const Config = require("./config.js");
 const { REST } = require('@discordjs/rest');
+const { readdirSync } = require("fs");
 const { Routes } = require('discord-api-types/v10');
 require("dotenv").config();
 
@@ -19,9 +18,9 @@ const client = new Client({
 });
 
 
-client.commands = new Collection()
-client.slashcommands = new Collection()
-client.commandaliases = new Collection()
+client.commands = new Discord.Collection()
+client.slashcommands = new Discord.Collection()
+client.commandaliases = new Discord.Collection()
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
@@ -41,7 +40,7 @@ client.on("ready", async () => {
   } catch (error) {
     console.error(error);
   }
-  log(`${client.user.username} Activated!`);
+  console.log(`${client.user.username} Activated!`);
 })
 
 readdirSync('./src/events').forEach(async file => {
@@ -55,4 +54,4 @@ readdirSync('./src/events').forEach(async file => {
 
 client.login(process.env.TOKEN).catch(e => {
     console.log(e)
-  });
+});
