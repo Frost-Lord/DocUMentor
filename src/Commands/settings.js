@@ -4,8 +4,8 @@ const fs = require('fs');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("enable")
-    .setDescription("enable or disable the bot responding to message in all channels/select")
+    .setName("settings")
+    .setDescription("manage the options of the bot")
     .addChannelOption(option =>
       option.setName('channel')
         .setDescription('Select the channel to listen to, otherwise listens to all')
