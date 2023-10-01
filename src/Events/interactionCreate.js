@@ -12,7 +12,7 @@ module.exports = {
 				await command.run(client, interaction)
 			} catch(e) {
 				console.log(e);
-				interaction.reply({ content: "A problem was encountered while running the command! Please try again.", ephemeral: true })
+				interaction.reply({ content: "A problem was encountered while running the command! Please try again.", ephemeral: true });
 			}
 		}
 
@@ -22,7 +22,7 @@ module.exports = {
                 
 			} catch(e) {
 				console.log(e)
-				interaction.reply({ content: "A problem was encountered while running the button! Please try again.", ephemeral: true })
+				interaction.reply({ content: "A problem was encountered while running the button! Please try again.", ephemeral: true });
 			}
 		}
 	}

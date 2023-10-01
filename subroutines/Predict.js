@@ -8,7 +8,7 @@ async function Predict (text) {
     let model = Session.getModel();
     if (!model) {
       model = await tf.loadLayersModel("file://./src/model/model.json");
-      Session.addModel(model);
+      Session.addModel(model, "Default");
     }
 
     const sentenceEncoder = await use.load();

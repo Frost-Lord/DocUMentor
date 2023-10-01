@@ -58,7 +58,7 @@ const trainModel = async (progressCallback) => {
         progressCallback({
             epoch: epoch + 1,
             totalEpochs: 300,
-            accuracy: parseFloat((runningAccuracyAvg * 100).toFixed(2)),
+            accuracy: parseFloat((runningAccuracyAvg * 100).toFixed(2)) + "%",
             loss: parseFloat((logs.loss * 100).toFixed(2)),
             elapsedTime: formatTime(elapsedTime),
             estimatedTime: formatTime(estimatedTime)

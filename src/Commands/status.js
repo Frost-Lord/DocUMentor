@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { EmbedBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder } = require("discord.js");
-const Predict = require("../../subroutines/Predict")
+const { EmbedBuilder } = require("discord.js");
+const tf = require('@tensorflow/tfjs-node');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,6 +10,22 @@ module.exports = {
 
     await interaction.deferReply();
 
+    const model = await tf.loadLayersModel(`file://./src/model/model.json`);
 
+    const weights = model.getWeights();
+    const weightShapes = weights.map(w => w.shape.join(" x ")).join(", ");
+    const layerDetails = model.layers.map(layer => `${layer.name}: ${layer.outputShape.join(' x ')}`).join("\n");
+
+    const truncatedLayerDetails = layerDetails.length > 1024 ? `${layerDetails.substring(0, 1020)}...` : layerDetails;
+
+    const embed = new EmbedBuilder()
+      .setColor(0x0099ff)
+      .setTitle('AI Model:')
+      .setDescription(`**Layers:** \n ${truncatedLayerDetails} \n **Weights Shape:** \n ${weightShapes}`)
+      .setTimestamp();
+
+    await interaction.editReply({
+      embeds: [embed]
+    });
   }
 };

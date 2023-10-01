@@ -1,45 +1,34 @@
-let Sessions = {};
+const crypto = require('crypto');
+
 let model = undefined;
+let modelHistory = {};
 
 module.exports = {
-    add: function (id, type) {
-        Sessions[id] = {
-            mode: "pattern",
-            type: type,
-            messages: [],
-            lastmessage: new Date().getTime(),
-        };
-    },
-    remove: function (id) {
-        delete Sessions[id];
-    },
-    addResponse: function (id, type, dataset, question) {
-        Sessions[id] = {
-            mode: "response",
-            type: type,
-            messages: [],
-            question: question,
-            lastmessage: new Date().getTime(),
-            dataset: dataset,
+    history: function (id) {
+        if (id && modelHistory[id]) {
+            return modelHistory[id];
         }
+        return Object.keys(modelHistory).map(key => ({
+            id: key,
+            ...modelHistory[key],
+        }));
     },
-    save: function (id) {
-        var SessData = Sessions[id];
-        if (!SessData.messages.length) return;
-
-        var Dataset = JSON.parse(Fs.readFileSync("./src/database/db.json"));
-
-        SessData.messages.forEach(msg => {
-            if (Dataset[SessData.type][SessData.mode + "s"].find(c => c == msg)) return;
-            Dataset[SessData.type][SessData.mode + "s"].push(msg);
-        });
-
-        Fs.writeFileSync("./src/database/db.json", JSON.stringify(Dataset));
-    },
-    addModel(trainedModel) {
+    addModel(trainedModel, accuracy) {
+        const id = crypto.randomBytes(16).toString('hex');
+        modelHistory[id] = {
+            json: trainedModel.toJSON(),
+            weights: trainedModel.getWeights(),
+            accuracy: accuracy
+        };
         model = trainedModel;
+        return id;
+    },
+    setAsCurrentModel(id) {
+        if (id && modelHistory[id]) {
+            model = modelHistory[id];
+        }
     },
     getModel() {
         return model;
     },
-}
+};

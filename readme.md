@@ -38,17 +38,6 @@ This to-do list tracks the features and commands that need to be developed or im
 - [ ] Implement import functionality for the training dataset.
 - [ ] Add error handling for unsuccessful import/export operations.
 
-### help
-- [ ] Implement a basic `help` command to list available commands.
-- [ ] Add detailed descriptions for each command.
-- [ ] Include examples of how to use each command.
-
-### model
-- [ ] Implement functionality to list all available models.
-- [ ] Add the ability to switch between different models.
-- [ ] Implement model versioning.
-- [ ] Add functionality to delete old or unused models.
-
 ### status
 - [ ] Implement a status command to show the bot's current state.
 - [ ] Show the status of the currently selected model (idle, training, evaluating).

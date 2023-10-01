@@ -83,8 +83,12 @@ module.exports = {
       });
     }
 
+    let AccData = 'Default'
+
       const updateProgressBar = async(progressData) => {
-        const { epoch, totalEpochs, accuracy, loss, elapsedTime, estimatedTime } = progressData;
+        let { epoch, totalEpochs, accuracy, loss, elapsedTime, estimatedTime } = progressData;
+
+        AccData = accuracy;
         
         const percentage = (parseFloat(epoch / totalEpochs) * 100).toFixed(2);
         const progressBar = generateProgressBar(percentage);
@@ -108,7 +112,7 @@ module.exports = {
 
       let Model = await trainAI(updateProgressBar);
       Model.save("file://./src/model");
-      Session.addModel(Model);
+      Session.addModel(Model, AccData);
 
   }
 };
