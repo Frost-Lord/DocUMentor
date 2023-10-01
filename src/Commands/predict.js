@@ -1,9 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder } = require("discord.js");
-const tf = require("@tensorflow/tfjs-node");
-const use = require("@tensorflow-models/universal-sentence-encoder");
-const Session = require("../NeuralNetwork/Session");
-const fs = require('fs');
+const Predict = require("../../subroutines/Predict")
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,44 +8,49 @@ module.exports = {
     .setDescription("predict a response")
     .addStringOption(option =>
       option.setName('input')
-        .setRequired(true)
-        .setDescription('enter what you want to be predicted')),
+        .setDescription('enter what you want to be predicted')
+        .setRequired(true)),
   async run(client, interaction) {
 
-    let model = Session.getModel();
-    if (!model) {
-      model = await tf.loadLayersModel("file://./src/model/model.json");
-      Session.addModel(model);
-    }
-
-    await interaction.deferReply();
-
-    const sentenceEncoder = await use.load();
     const text = interaction.options.getString("input");
 
-    const xPredict = await sentenceEncoder.embed([text.toLowerCase()]);
-    let prediction = await model.predict(xPredict).array();
-    prediction = prediction[0]; // Assuming batch size of 1
+    await interaction.deferReply();
+    const data = await Predict(text)
 
-    let highest = [0, 0];
-    for (let i = 0; i < prediction.length; ++i) {
-      if (highest[1] < prediction[i]) {
-          highest[0] = i;
-          highest[1] = prediction[i];
-      }
+    const buttons = [
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Success)
+        .setLabel(`Open in thread`)
+        .setCustomId('openinthread')
+        .setEmoji("🧵")
+    ];
+    
+    if (global.selflearning === true) {
+      buttons.unshift(
+        new ButtonBuilder()
+          .setStyle(ButtonStyle.Success)
+          .setLabel(`Correct`)
+          .setCustomId('correctguess')
+          .setEmoji("✅"),
+        new ButtonBuilder()
+          .setStyle(ButtonStyle.Danger)
+          .setLabel('Incorrect')
+          .setCustomId('incorrectguess')
+          .setEmoji('❌')
+      );
     }
-
-    const Dataset = JSON.parse(fs.readFileSync("./src/database/db.json"));
-    const types = Object.keys(Dataset);
-    const predicted = types[highest[0]];
-
-    let possibleResponses = Dataset[predicted].responses;
-    const response = possibleResponses[Math.floor(Math.random() * possibleResponses.length)];
+    
+    const row = new ActionRowBuilder()
+      .addComponents(buttons);
 
     const embed = new EmbedBuilder()
     .setTitle("Prediction:")
-    .setDescription(`Input: ${text} \n Category: ${predicted} \n Response: ${response}`)
+    .setDescription(`Input: ${data.text} \n Category: ${data.predicted} \n Response: ${data.response}`)
 
-    await interaction.editReply({ embeds: [embed] });
+    if (global.selflearning === false && global.threads === false) {
+      await interaction.editReply({ embeds: [embed] });
+    } else {
+      await interaction.editReply({ embeds: [embed], components: [row], });
+    }
   }
 };

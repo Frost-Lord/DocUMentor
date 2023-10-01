@@ -7,7 +7,9 @@ module.exports = {
         if (message.channel.type === 'dm') return;
 
         if (!message.content) return;
-        if (message.content.length < 20) return;
+
+
+        
 
 
     }

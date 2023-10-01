@@ -4,8 +4,10 @@ const { REST } = require('@discordjs/rest');
 const { readdirSync } = require("fs");
 const { Routes } = require('discord-api-types/v10');
 require("dotenv").config();
+const fs = require("fs");
+const Dataset = JSON.parse(fs.readFileSync("./src/database/db.json")) || {};
 
-const client = new Client({
+const client = global.client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -22,6 +24,11 @@ client.commands = new Discord.Collection()
 client.slashcommands = new Discord.Collection()
 client.commandaliases = new Discord.Collection()
 
+global.channel = Dataset.config?.channel || null;
+global.enabled = Dataset.config?.enabled || true;
+global.threads = Dataset.config?.threads || true;
+global.selflearning = Dataset.config?.selflearning || false;
+
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 const slashcommands = [];
@@ -37,11 +44,12 @@ client.on("ready", async () => {
       Routes.applicationCommands(client.user.id),
       { body: slashcommands },
     );
+    console.log(`${client.user.username} Activated!`);
   } catch (error) {
+    console.error('Error with the following command data:', JSON.stringify(slashcommands, null, 2));
     console.error(error);
   }
-  console.log(`${client.user.username} Activated!`);
-})
+});
 
 readdirSync('./src/events').forEach(async file => {
   const event = await require(`./src/events/${file}`);
