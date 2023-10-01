@@ -19,7 +19,7 @@ DOCUMENTOR is an AI-powered Discord bot designed for machine learning applicatio
 To get started with DOCUMENTOR, you'll need to [install Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/). Then, you can clone this repository and install the necessary packages.
 
 ```bash
-git clone https://github.com/yourusername/DOCUMENTOR.git
+git clone https://github.com/Frost-Lord/DOCUMENTOR.git
 cd DOCUMENTOR
 npm install
 npm start
