@@ -1,6 +1,6 @@
 const fs = require("fs");
 const tf = require("@tensorflow/tfjs-node");
-const use = require("@tensorflow-models/universal-sentence-encoder")
+const Session = require("./Session")
 
 const trainModel = async (progressCallback) => {
     var data = JSON.parse(fs.readFileSync("./src/database/db.json"));
@@ -14,7 +14,7 @@ const trainModel = async (progressCallback) => {
         });
     }
 
-    var sentenceEncoder = await use.load();
+    var sentenceEncoder = await Session.loadSentenceEncoder();
     var sentences = trainingData.map(t => t.message.toLowerCase());
     var xTrain = await sentenceEncoder.embed(sentences);
 
