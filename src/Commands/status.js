@@ -10,8 +10,7 @@ module.exports = {
 
     await interaction.deferReply();
 
-    const model = await tf.loadLayersModel(`file://./src/model/model.json`);
-
+    const model = await Session.getModel();
     const weights = model.getWeights();
     const weightShapes = weights.map(w => w.shape.join(" x ")).join(", ");
     const layerDetails = model.layers.map(layer => `${layer.name}: ${layer.outputShape.join(' x ')}`).join("\n");
