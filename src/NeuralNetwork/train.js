@@ -28,6 +28,16 @@ const trainModel = async (progressCallback) => {
     model.add(
         tf.layers.dense({
             inputShape: [xTrain.shape[1]],
+            activation: "relu",
+            units: 128
+        })
+    );
+    model.add(tf.layers.dropout({ rate: 0.5 }));
+    model.add(tf.layers.dense({ activation: 'relu', units: 64 }));
+    model.add(tf.layers.dropout({ rate: 0.5 }));
+    model.add(
+        tf.layers.dense({
+            inputShape: [xTrain.shape[1]],
             activation: "softmax",
             units: types.length
         })

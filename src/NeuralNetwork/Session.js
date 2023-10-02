@@ -1,6 +1,8 @@
 const crypto = require('crypto');
+const use = require("@tensorflow-models/universal-sentence-encoder");
 
 let model = undefined;
+let sentenceEncoder = null;
 let modelHistory = {};
 
 module.exports = {
@@ -27,6 +29,12 @@ module.exports = {
         if (id && modelHistory[id]) {
             model = modelHistory[id];
         }
+    },
+    loadSentenceEncoder: async function() {
+        if (!sentenceEncoder) {
+            sentenceEncoder = await use.load();
+          }
+          return sentenceEncoder;
     },
     getModel() {
         return model;
