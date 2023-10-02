@@ -31,11 +31,9 @@ This to-do list tracks the features and commands that need to be developed or im
 
 ## Commands
 
-### export/import
-- [ ] Implement export functionality for the model.
-- [ ] Implement export functionality for the training dataset.
-- [ ] Implement import functionality for the model.
-- [ ] Implement import functionality for the training dataset.
+### share
+- [ ] Implement export functionality for the model + training dataset.
+- [ ] Implement import functionality for the model + training dataset.
 - [ ] Add error handling for unsuccessful import/export operations.
 
 ### status
