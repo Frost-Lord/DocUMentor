@@ -4,20 +4,9 @@ const fs = require('fs');
 
 const Dataset = JSON.parse(fs.readFileSync("./src/database/db.json"));
 
-let model = Session.getModel();
-let sentenceEncoder = null;
-
-async function loadModelAndEncoder() {
-  if (!model) {
-    model = await tf.loadLayersModel("file://./src/model/model.json");
-    Session.addModel(model, "Default");
-  }
-  sentenceEncoder = await Session.loadSentenceEncoder();
-}
-
-loadModelAndEncoder();
-
 async function Predict(text) {
+  const model = await Session.getModel();
+  const sentenceEncoder = await Session.loadSentenceEncoder();
   const xPredict = await sentenceEncoder.embed([text.toLowerCase()]);
   const predictionTensor = model.predict(xPredict);
   const highestIndex = predictionTensor.argMax(-1).dataSync()[0];

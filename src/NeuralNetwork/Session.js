@@ -36,7 +36,11 @@ module.exports = {
           }
           return sentenceEncoder;
     },
-    getModel() {
+    getModel: async function() {
+        if (!model) {
+            model = await tf.loadLayersModel("file://./src/model/model.json");
+            this.addModel(model, "Default");
+        }
         return model;
     },
 };

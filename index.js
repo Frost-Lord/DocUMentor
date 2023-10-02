@@ -5,7 +5,11 @@ const { readdirSync } = require("fs");
 const { Routes } = require('discord-api-types/v10');
 require("dotenv").config();
 const fs = require("fs");
+const Session = require("./src/NeuralNetwork/Session")
 const Dataset = JSON.parse(fs.readFileSync("./src/database/db.json")) || {};
+
+
+Session.loadSentenceEncoder();
 
 const client = global.client = new Client({
     intents: [
