@@ -44,8 +44,9 @@ module.exports = {
       .addComponents(buttons);
 
     const embed = new EmbedBuilder()
-    .setTitle("Prediction:")
-    .setDescription(`Input: ${data.text} \n Category: ${data.predicted} \n Response: ${data.response}`)
+    .setTitle(`**Prediction**: ${data.predicted}`)
+    .setDescription(`>>>${data.response}`)
+    .setColor(0x0099ff);
 
     if (global.selflearning === false && global.threads === false) {
       await interaction.editReply({ embeds: [embed] });
