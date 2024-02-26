@@ -1,18 +1,18 @@
 {
-    "greeting": {
-        "patterns": ["hello", "hi", "hey"],
-        "responses": ["Hi there!", "Hello!", "Hey!"]
+    "API": {
+        "patterns": ["Where is the API?", "How do I use the API?", "API documentation"],
+        "responses": ["You can find the API documentation here: [API Documentation Link]", "To use the API, please follow the steps in the documentation.", "The API is accessible through the following endpoint: [API Endpoint]"]
     },
-    "goodbye": {
-        "patterns": ["bye", "goodbye", "see you"],
-        "responses": ["Goodbye!", "See you later!", "Bye!"]
+    "Documentation": {
+        "patterns": ["Where can I find the documentation?", "Is there a guide?", "Help with documentation"],
+        "responses": ["The documentation is available at [Documentation Link].", "You can find the guide in the documentation section.", "For more help, refer to the documentation or contact support."]
     },
-    "insult": {
-        "patterns": ["you're stupid", "I hate you", "you suck"],
-        "responses": ["That's not nice.", "Well, everyone has their opinion.", "Sorry you feel that way."]
+    "Support": {
+        "patterns": ["Need help", "Support request", "How do I contact support?"],
+        "responses": ["For support, please email us at [Support Email] or call [Support Phone Number].", "You can submit a support request through our website.", "Our support team is available 24/7 to assist you."]
     },
-    "compliment": {
-        "patterns": ["you're awesome", "you're great", "I like you"],
-        "responses": ["Thank you!", "You're awesome too!", "I'm flattered."]
+    "Integration": {
+        "patterns": ["How to integrate", "Integration steps", "Integration guide"],
+        "responses": ["You can integrate by following these steps: [Integration Steps].", "For integration guidance, refer to the section on integration in our documentation.", "Check out our integration guide for detailed instructions."]
     }
 }
